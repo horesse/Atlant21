@@ -1,0 +1,38 @@
+﻿<h1>Список кладовщиков</h1>
+<input type="button" value="Добавить" class="btn btn-default" (click)="add()" />
+<table *ngIf="tableMode; else create" class="table table-striped">
+    <thead>
+        <tr>
+            <td>ID</td>
+            <td>Имя</td>
+            <td>Кол-во деталей</td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let k of Keepers">
+            <ng-template [ngIf]="Keeper?.id != k.id" [ngIfElse]="edit">
+                <td>{{k?.id}}</td>
+                <td>{{k?.name}}</td>
+                <td>{{k?.count}}</td>
+                <td>
+                    <button class="btn btn-sm btn-danger" (click)="delete(k)">Удалить</button>
+                </td>
+            </ng-template>
+        </tr>
+    </tbody>
+</table>
+
+<ng-template #create>
+    <div class="form-group">
+        <label>Имя кладовщика</label>
+        <input type="text" [(ngModel)]="Keeper.name" class="form-control" #name="ngModel" required />
+        <div [hidden]="name.valid || name.untouched" class="alert alert-danger">
+            Не указано имя
+        </div>
+    </div>
+    <div>
+        <input [disabled]="name.invalid" type="button" value="Сохранить" (click)="save()" class="btn btn-success" />
+        <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
+    </div>
+</ng-template>

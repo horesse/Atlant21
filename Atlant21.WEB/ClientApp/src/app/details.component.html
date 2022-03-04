@@ -1,0 +1,81 @@
+﻿<h1>Список деталей</h1>
+<input type="button" value="Добавить" class="btn btn-default" (click)="add()" />
+
+<table *ngIf="tableMode; else create" class="table table-striped">
+    <thead>
+        <tr>
+            <td>ID</td>
+            <td>Код</td>
+            <td>Имя</td>
+            <td>Кол-во</td>
+            <td>Кладовщик</td>
+            <td>Дата создания</td>
+            <td>Дата удаления</td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let k of Details">
+            <ng-template [ngIf]="Detail?.id != k.id">
+                <td>{{k?.id}}</td>
+                <td>{{k?.num}}</td>
+                <td>{{k?.name}}</td>
+                <td>{{k?.count}}</td>
+                <td>{{k?.keepersId}}</td>
+                <td>{{k?.createDate}}</td>
+                <td>{{k?.deleteDate}}</td>
+                <td>
+                    <button class="btn btn-sm btn-primary" (click)="deleteDetail(k)">Удалить</button>
+                </td>
+            </ng-template>
+        </tr>
+    </tbody>
+</table>
+
+<ng-template #create>
+    <div class="form-group">
+        <label>Код детали</label>
+        <input type="text" [(ngModel)]="Detail.num" class="form-control" #num="ngModel" required />
+        <div [hidden]="num.valid || num.untouched" class="alert alert-danger">
+            Не указан код детали
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Название детали</label>
+        <input type="text" [(ngModel)]="Detail.name" class="form-control" #name="ngModel" required />
+        <div [hidden]="name.valid || name.untouched" class="alert alert-danger">
+            Не указано имя детали
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Кол-во деталей</label>
+        <input type="text" [(ngModel)]="Detail.count" class="form-control" #count="ngModel" required />
+        <div [hidden]="count.valid || count.untouched" class="alert alert-danger">
+            Не указано кол-во деталей
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Кладовщик</label>
+        <select [(ngModel)]="Detail.keepersid" class="form-control" #keeperid="ngModel" required>
+            <option *ngFor="let k of Keepers">
+                <ng-template [ngIf]="Keeper?.id != k.id" [ngIfElse]="edit">
+                    {{k.id}}
+                </ng-template>
+            </option>
+        </select>
+        <div [hidden]="keeperid.valid || keeperid.untouched" class="alert alert-danger">
+            Не указан кладовщик
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Дата создания</label>
+        <input type="date" [(ngModel)]="Detail.createdate" class="form-control" #createdate="ngModel"min="2022-01-01" max="2022-12-31" required/>
+        <div [hidden]="createdate.valid || createdate.untouched" class="alert alert-danger">
+            Не указана дата создания детали
+        </div>
+    </div>
+    <div>
+        <input [disabled]="name.invalid || num.invalid || count.invalid || keeperid.invalid || createdate.invalid" type="button" value="Сохранить" (click)="save()" class="btn btn-success" />
+        <input type="button" value="Отмена" (click)="cancel()" class="btn btn-warning" />
+    </div>
+</ng-template>
