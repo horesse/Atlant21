@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Collections.Generic;
 using Atlant21.WEB.Models;
-using BLL.Interfaces;
-using BLL.DTO;
 using AutoMapper;
-using System;
+using BLL.DTO;
+using BLL.Infrastructure;
+using BLL.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Atlant21.WEB.Controllers
 {
@@ -32,20 +32,19 @@ namespace Atlant21.WEB.Controllers
         [HttpPost]
         public IActionResult Post(DetailsViewModel Details)
         {
-
-            var DetailsDTO = new DetailsDTO
+            try
             {
-                Id = Details.Id,
-                Name = Details.Name,
-                Num = Details.Num,
-                Count = Details.Count,
-                CreateDate = Details.CreateDate,
-                KeepersId = Details.KeepersId,
-                DeleteDate = null
-            };
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DetailsViewModel, DetailsDTO>()).CreateMapper();
+                var DetailsDTO = mapper.Map<DetailsViewModel, DetailsDTO>(Details);
+                db.AddDetail(DetailsDTO);
+                return Ok(DetailsDTO);
+            }
+            catch (ValidationException ex)
+            {
+                ModelState.AddModelError(ex.Property, ex.Message);
+            }
+            return BadRequest(ModelState);
 
-            db.AddDetail(DetailsDTO);
-            return Ok(DetailsDTO);
         }
         
         [HttpPut]
@@ -53,16 +52,10 @@ namespace Atlant21.WEB.Controllers
         {
             if (Details != null)
             {
-                var DetailsDTO = new DetailsDTO
-                {
-                    Id = Details.Id,
-                    Name = Details.Name,
-                    Num = Details.Num,
-                    Count = Details.Count,
-                    CreateDate = Details.CreateDate,
-                    KeepersId = Details.KeepersId,
-                    DeleteDate = DateTime.Now
-                };
+                Details.DeleteDate = DateTime.Now;
+
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DetailsViewModel, DetailsDTO>()).CreateMapper();
+                var DetailsDTO = mapper.Map<DetailsViewModel, DetailsDTO>(Details);
 
                 db.DeleteDetail(DetailsDTO);
             }

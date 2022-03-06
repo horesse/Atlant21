@@ -46,27 +46,18 @@ namespace BLL.Services
 
         public void AddKeeper(KeepersDTO KeepersDTO)
         {
-            Keepers Keepers = new Keepers
-            {
-                Id = KeepersDTO.Id,
-                Name = KeepersDTO.Name
-            };
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<KeepersDTO, Keepers>()).CreateMapper();
+            var Keepers = mapper.Map<KeepersDTO, Keepers>(KeepersDTO);
+
             Database.Keepers.Create(Keepers);
             Database.Save();
         }
 
         public void AddDetail(DetailsDTO DetailsDTO)
         {
-            Details Details = new Details
-            {
-                Id = DetailsDTO.Id,
-                Name = DetailsDTO.Name,
-                Num = DetailsDTO.Num,
-                Count = DetailsDTO.Count,
-                CreateDate = DetailsDTO.CreateDate,
-                KeepersId = DetailsDTO.KeepersId,
-                DeleteDate = DetailsDTO.DeleteDate
-            };
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DetailsDTO, Details>()).CreateMapper();
+            var Details = mapper.Map<DetailsDTO, Details>(DetailsDTO);
+
             Database.Details.Create(Details);
             Database.Save();
         }
@@ -78,16 +69,9 @@ namespace BLL.Services
 
         public void DeleteDetail(DetailsDTO DetailsDTO)
         {
-            Details Details = new Details
-            {
-                Id = DetailsDTO.Id,
-                Name = DetailsDTO.Name,
-                Num = DetailsDTO.Num,
-                Count = DetailsDTO.Count,
-                CreateDate = DetailsDTO.CreateDate,
-                KeepersId = DetailsDTO.KeepersId,
-                DeleteDate = DetailsDTO.DeleteDate
-            };
+            var mapper = new MapperConfiguration(cfg => cfg.CreateMap<DetailsDTO, Details>()).CreateMapper();
+            var Details = mapper.Map<DetailsDTO, Details>(DetailsDTO);
+
             Database.Details.Update(Details);
             Database.Save();
         }

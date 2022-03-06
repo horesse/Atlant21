@@ -33,11 +33,8 @@ namespace Atlant21.WEB.Controllers
         {
             try
             {
-                var KeepersDTO = new KeepersDTO
-                {
-                    Id = Keepers.Id,
-                    Name = Keepers.Name
-                };
+                var mapper = new MapperConfiguration(cfg => cfg.CreateMap<KeepersViewModel, KeepersDTO>()).CreateMapper();
+                var KeepersDTO = mapper.Map<KeepersViewModel, KeepersDTO>(Keepers);
                 db.AddKeeper(KeepersDTO);
                 return Ok(KeepersDTO);
             }
